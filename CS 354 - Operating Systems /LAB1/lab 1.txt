@@ -1,0 +1,382 @@
+Lab 1 CS354
+
+Juan Felipe Florez Giraldo 
+
+
+3.3, what was the output, and what happened after the output appeared?
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+The output was the numbers 1 to 10 printed to the console. After the output, the system entered an infinite loop
+
+3.4, what was the output?
+
+The output was the numbers 1 to 10 printed concurrently by two processes, possibly interleaved or repeated, depending on scheduling
+
+3.5, what was the output of the three runs? Was the final x equal to
+NPR? Explain why.
+
+Run 1: 
+process start
+All process created, x is 0
+Expected x to be 10 and found 10 
+
+Run 2: 
+process start
+All process created, x is 0
+Expected x to be 10 and found -806 
+
+Run 3: 
+process start 
+All process created, x is 0
+Expected x to be 10 and found 9
+
+The final x was not always equal to NPR (10). Without synchronization, concurrent modifications to x caused race conditions.
+
+
+3.6 did the output differ between printf and kprintf?
+
+with printf
+
+Xinu for bbb -- version #103  (jflorezg)  Sat Sep  6 11:01:27 EDT 2025
+
+Ethernet Link is Up. Speed is 100Mbps
+Link is Full Duplex
+MAC Address is: 6C:EC:EB:AE:F7:3E
+ 519704672 bytes of free memory.  Free list:
+           [0x8105CFA0 to 0x9FFFDFFF]
+    154244 bytes of Xinu code.
+           [0x81000000 to 0x81025A83]
+    148460 bytes of data.
+           [0x81026000 to 0x8104A3EB]
+
+Obtained IP address  10.168.15.137   (0x0aa80f89)
+process start
+All process created, x is 0
+Expected x to be 10 and found 1122
+
+
+
+with kprintf
+
+Xinu for bbb -- version #104  (jflorezg)  Sat Sep  6 11:07:11 EDT 2025
+
+Ethernet Link is Up. Speed is 100Mbps
+Link is Full Duplex
+MAC Address is: 6C:EC:EB:AE:F7:3E
+ 519704672 bytes of free memory.  Free list:
+           [0x8105CFA0 to 0x9FFFDFFF]
+    154244 bytes of Xinu code.
+           [0x81000000 to 0x81025A83]
+    148460 bytes of data.
+           [0x81026000 to 0x8104A3EB]
+
+Obtained IP address  10.168.15.137   (0x0aa80f89)
+process start
+All process created, x is 0
+Expected x to be 10 and found -1419
+
+Xinu for bbb -- version #103  (jflorezg)  Sat Sep  6 11:01:27 EDT 2025
+...
+process start
+All process created, x is 0
+Expected x to be 10 and found 1122
+
+No differences in format or delays. The values of x varied (1122 and -1419) due to race conditions.
+
+
+3.7 were results from the three runs the same? Was the final x equal to
+NPR? Explain why
+
+xinu08 134 $ cs-console beagle137
+connection 'beagle137', class 'cortex', host 'xinuserver.cs.purdue.edu'
+
+
+(command-mode) g
+Using file: xinu
+connection 'beagle137-dl', class 'DOWNLOAD', host 'xinuserver.cs.purdue.edu'
+ 336 -rw-rw-rw-   1 newxinu   159808 Sep  5 15:53 /tftpboot/beagle137.xbin
+cp-download complete
+
+connection 'beagle137-pc', class 'POWERCYCLE', host 'xinuserver.cs.purdue.edu'
+DLA50000
+
+
+U-Boot SPL 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+reading args
+spl_load_image_fat_os: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+
+I2C:   ready
+DRAM:  512 MiB
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+gpio: pin 53 (gpio 53) value is 1
+Card did not respond to voltage select!
+mmc0(part 0) is current device
+Card did not respond to voltage select!
+gpio: pin 56 (gpio 56) value is 0
+gpio: pin 55 (gpio 55) value is 0
+gpio: pin 54 (gpio 54) value is 0
+mmc1(part 0) is current device
+gpio: pin 54 (gpio 54) value is 1
+SD/MMC found on device 1
+reading uEnv.txt
+1450 bytes read in 5 ms (283.2 KiB/s)
+gpio: pin 55 (gpio 55) value is 1
+Loaded environment from uEnv.txt
+Importing environment from mmc ...
+Checking if uenvcmd is set ...
+gpio: pin 56 (gpio 56) value is 1
+Running uenvcmd ...
+cpsw Waiting for PHY auto negotiation to complete. done
+link up on port 0, speed 100, full duplex
+BOOTP broadcast 1
+BOOTP broadcast 2
+BOOTP broadcast 3
+DHCP client bound to address 10.168.15.137
+Using cpsw device
+TFTP from server 10.168.15.99; our IP address is 10.168.15.137
+Filename 'beagle137.xbin'.
+Load address: 0x82000000
+Loading: ################################
+	 1 MiB/s
+done
+Bytes transferred = 159808 (27040 hex)
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    159744 Bytes = 156 KiB
+   Load Address: 81000000
+   Entry Point:  81000000
+   Verifying Checksum ... OK
+   Loading Kernel Image ... OK
+
+Starting kernel ...
+
+ 
+
+Xinu for bbb -- version #102  (jflorezg)  Fri Sep  5 15:43:01 EDT 2025
+
+Ethernet Link is Up. Speed is 100Mbps
+Link is Full Duplex
+MAC Address is: 6C:EC:EB:AE:F7:3E
+ 519704672 bytes of free memory.  Free list:
+           [0x8105CFA0 to 0x9FFFDFFF]
+    154304 bytes of Xinu code.
+           [0x81000000 to 0x81025ABF]
+    148464 bytes of data.
+           [0x81026000 to 0x8104A3EF]
+
+Obtained IP address  10.168.15.137   (0x0aa80f89)
+process start
+All process created, x is 0
+Expected x to be 10 and found 10
+
+
+
+(command-mode) g
+Using file: xinu
+connection 'beagle137-dl', class 'DOWNLOAD', host 'xinuserver.cs.purdue.edu'
+ 336 -rw-rw-rw-   1 newxinu   159808 Sep  5 15:53 /tftpboot/beagle137.xbin
+cp-download complete
+
+connection 'beagle137-pc', class 'POWERCYCLE', host 'xinuserver.cs.purdue.edu'
+DLA50000
+
+
+U-Boot SPL 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+reading args
+spl_load_image_fat_os: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+
+I2C:   ready
+DRAM:  512 MiB
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+gpio: pin 53 (gpio 53) value is 1
+Card did not respond to voltage select!
+mmc0(part 0) is current device
+Card did not respond to voltage select!
+gpio: pin 56 (gpio 56) value is 0
+gpio: pin 55 (gpio 55) value is 0
+gpio: pin 54 (gpio 54) value is 0
+mmc1(part 0) is current device
+gpio: pin 54 (gpio 54) value is 1
+SD/MMC found on device 1
+reading uEnv.txt
+1450 bytes read in 5 ms (283.2 KiB/s)
+gpio: pin 55 (gpio 55) value is 1
+Loaded environment from uEnv.txt
+Importing environment from mmc ...
+Checking if uenvcmd is set ...
+gpio: pin 56 (gpio 56) value is 1
+Running uenvcmd ...
+cpsw Waiting for PHY auto negotiation to complete. done
+link up on port 0, speed 100, full duplex
+BOOTP broadcast 1
+BOOTP broadcast 2
+DHCP client bound to address 10.168.15.137
+Using cpsw device
+TFTP from server 10.168.15.99; our IP address is 10.168.15.137
+Filename 'beagle137.xbin'.
+Load address: 0x82000000
+Loading: ################################
+	 1.1 MiB/s
+done
+Bytes transferred = 159808 (27040 hex)
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    159744 Bytes = 156 KiB
+   Load Address: 81000000
+   Entry Point:  81000000
+   Verifying Checksum ... OK
+   Loading Kernel Image ... OK
+
+Starting kernel ...
+
+ 
+
+Xinu for bbb -- version #102  (jflorezg)  Fri Sep  5 15:43:01 EDT 2025
+
+Ethernet Link is Up. Speed is 100Mbps
+Link is Full Duplex
+MAC Address is: 6C:EC:EB:AE:F7:3E
+ 519704672 bytes of free memory.  Free list:
+           [0x8105CFA0 to 0x9FFFDFFF]
+    154304 bytes of Xinu code.
+           [0x81000000 to 0x81025ABF]
+    148464 bytes of data.
+           [0x81026000 to 0x8104A3EF]
+
+Obtained IP address  10.168.15.137   (0x0aa80f89)
+process start
+All process created, x is 0
+Expected x to be 10 and found 10
+
+
+
+(command-mode) g
+Using file: xinu
+connection 'beagle137-dl', class 'DOWNLOAD', host 'xinuserver.cs.purdue.edu'
+ 336 -rw-rw-rw-   1 newxinu   159808 Sep  5 15:54 /tftpboot/beagle137.xbin
+cp-download complete
+
+connection 'beagle137-pc', class 'POWERCYCLE', host 'xinuserver.cs.purdue.edu'
+DLA50000
+
+
+U-Boot SPL 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+reading args
+spl_load_image_fat_os: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2014.04-00014-g47880f5 (Apr 22 2014 - 13:23:54)
+
+I2C:   ready
+DRAM:  512 MiB
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+gpio: pin 53 (gpio 53) value is 1
+Card did not respond to voltage select!
+mmc0(part 0) is current device
+Card did not respond to voltage select!
+gpio: pin 56 (gpio 56) value is 0
+gpio: pin 55 (gpio 55) value is 0
+gpio: pin 54 (gpio 54) value is 0
+mmc1(part 0) is current device
+gpio: pin 54 (gpio 54) value is 1
+SD/MMC found on device 1
+reading uEnv.txt
+1450 bytes read in 5 ms (283.2 KiB/s)
+gpio: pin 55 (gpio 55) value is 1
+Loaded environment from uEnv.txt
+Importing environment from mmc ...
+Checking if uenvcmd is set ...
+gpio: pin 56 (gpio 56) value is 1
+Running uenvcmd ...
+cpsw Waiting for PHY auto negotiation to complete. done
+link up on port 0, speed 100, full duplex
+BOOTP broadcast 1
+BOOTP broadcast 2
+DHCP client bound to address 10.168.15.137
+Using cpsw device
+TFTP from server 10.168.15.99; our IP address is 10.168.15.137
+Filename 'beagle137.xbin'.
+Load address: 0x82000000
+Loading: ################################
+	 1006.8 KiB/s
+done
+Bytes transferred = 159808 (27040 hex)
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    159744 Bytes = 156 KiB
+   Load Address: 81000000
+   Entry Point:  81000000
+   Verifying Checksum ... OK
+   Loading Kernel Image ... OK
+
+Starting kernel ...
+
+ 
+
+Xinu for bbb -- version #102  (jflorezg)  Fri Sep  5 15:43:01 EDT 2025
+
+Ethernet Link is Up. Speed is 100Mbps
+Link is Full Duplex
+MAC Address is: 6C:EC:EB:AE:F7:3E
+ 519704672 bytes of free memory.  Free list:
+           [0x8105CFA0 to 0x9FFFDFFF]
+    154304 bytes of Xinu code.
+           [0x81000000 to 0x81025ABF]
+    148464 bytes of data.
+           [0x81026000 to 0x8104A3EF]
+
+Obtained IP address  10.168.15.137   (0x0aa80f89)
+process start
+All process created, x is 0
+Expected x to be 10 and found 10
+
+
+
+(command-mode) q
+                connection 'beagle137-sd', class 'SHUTDOWN', host 'xinuserver.cs.purdue.edu'
+
+
+The semaphore mutex ensured only one process modified x at a time, preventing race conditions and guaranteeing x = NPR (10).

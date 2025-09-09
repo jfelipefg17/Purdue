@@ -1,0 +1,58 @@
+/* Include Xinu's main header file to use its functions, like kprintf and semaphores */
+#include <xinu.h>
+
+/* Define constants: NPR is the number of processes (10), ITER is how many times to increment/decrement x (1000), DTIME is a delay in seconds (6) */
+#define NPR 10
+#define ITER 1000
+#define DTIME 6
+
+/* Global variable x, shared by all processes, starts at 0 */
+int x = 0;
+/* Array to track if each process is done, one slot per process (10 slots) */
+int done[NPR];
+/* Semaphore (mutex) to control access to x, ensuring only one process changes it at a time */
+sid32 mutex;
+
+/* Function domany: Each process runs this to modify x. Takes an ID (0 to 9) to identify the process */
+void domany(int id) {
+    int i, j; /* Variables for loops: i for incrementing x, j for decrementing x */
+    wait(mutex); /* Lock the semaphore so only this process can modify x */
+    for(i = 0; i < ITER; i++) x++; /* Add 1 to x, 1000 times */
+    for(j = 0; j < ITER; j++) x--; /* Subtract 1 from x, 1000 times */
+    x++; /* Add 1 to x, so each process contributes 1 to the final value */
+    signal(mutex); /* Unlock the semaphore, allowing another process to modify x */
+    done[id] = 1; /* Mark this process as finished in the done array */
+}
+
+/* Main function: Entry point of the program, runs when Xinu starts */
+process main(void) {
+    int i, j, k, all_done; /* Variables: i, j, k for loops, all_done to check if all processes are done */
+    char pname[16]; /* Array to store process names, like "do_num_0", "do_num_1", etc. */
+    
+    for(i = 0; i < NPR; i++) done[i] = 0; /* Set all slots in done array to 0 (no processes finished yet) */
+    mutex = semcreate(1); /* Create a semaphore with value 1 (allows one process at a time) */
+    kprintf("process start\n"); /* Print "process start" to the console using kprintf, which works reliably on Xinu */
+    
+    for(j = 0; j < NPR; j++) { /* Create 10 processes */
+        sprintf(pname, "do_num_%d", j); /* Create a name for each process, e.g., "do_num_0" for j=0 */
+        resume(create(domany, 8192, 10, pname, 1, j)); /* Create and start a process running domany with ID j */
+    }
+    
+    for(k = 0; k < NPR; k++) if(done[k] != 0) kprintf("%d is done early\n", k); /* Check if any process finished too soon, print if so */
+    kprintf("All process created, x is %d\n", x); /* Print the current value of x after creating processes */
+    sleep(DTIME); /* Wait 6 seconds to give processes time to run */
+    
+    do { /* Loop until all processes are done */
+        all_done = 1; /* Assume all processes are finished */
+        for(i = 0; i < NPR; i++) { /* Check each process in the done array */
+            if(done[i] == 0) { /* If a process isn’t done (done[i] = 0) */
+                all_done = 0; /* Mark that not all processes are done */
+                sleepms(1); /* Wait 1 millisecond before checking again */
+                break; /* Stop checking and retry the loop */
+            }
+        }
+    } while(!all_done); /* Keep looping until all processes are done */
+    
+    kprintf("Expected x to be %d and found %d\n\n", NPR, x); /* Print expected (10) and actual value of x */
+    return OK; /* Tell Xinu the program finished successfully */
+}
