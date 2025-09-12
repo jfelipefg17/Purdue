@@ -12,7 +12,6 @@ int x = 0;
 int done[NPR];
 /* Semaphore (mutex) to control access to x, ensuring only one process changes it at a time */
 sid32 mutex;
-
 /* Function domany: Each process runs this to modify x. Takes an ID (0 to 9) to identify the process */
 void domany(int id) {
     int i, j; /* Variables for loops: i for incrementing x, j for decrementing x */
