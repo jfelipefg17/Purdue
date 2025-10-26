@@ -1,0 +1,27 @@
+client:
+./client 10.168.53.14 3000
+Input lowercase sentence (press ctrl D to signal the end of input):
+10.168.53.10 2011
+happy
+Modified sentence received from server:
+HAPPY
+
+
+NAT:
+./nat 3000
+[NAT] listening on 3000
+[NAT] Parsed destination -> host: 10.168.53.10, port: 2011
+[NAT child 1346211] mapped -> local NAT port 40000
+
+
+Server:
+./server 2011
+The server is ready to receive
+Received sentence:
+happy
+Modified sentence:
+HAPPY
+
+
+NAT table:
+10.168.53.12 56904 40000
